@@ -1,5 +1,12 @@
 # CLI Auth System with 2FA
+
+https://github.com/user-attachments/assets/23b639b3-3a15-41fa-893e-4c7bf0b409ce
+
+
 <img width="1894" height="750" alt="image" src="https://github.com/user-attachments/assets/b941c5c7-75de-46f5-a1f6-66a883744613" />
+
+
+
 
 <img width="1909" height="748" alt="image" src="https://github.com/user-attachments/assets/f12e679d-8e35-434f-9a79-27e8c758f085" />
 
