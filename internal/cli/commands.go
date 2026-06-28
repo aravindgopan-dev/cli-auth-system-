@@ -16,7 +16,7 @@ func (h *CLIHandler) Register(ctx context.Context, args []string) error {
 	if err := h.AuthService.Register(ctx, username, password); err != nil {
 		return err
 	}
-	fmt.Printf("%sRegistration successful!%s\n", colorGreen, colorReset)
+	fmt.Println("Registration successful!")
 	return nil
 }
 
@@ -46,7 +46,7 @@ func (h *CLIHandler) Login(ctx context.Context, args []string) error {
 
 	h.CurrentToken = token
 	h.CurrentUser = user
-	fmt.Printf("%sLogin successful!%s\n", colorGreen, colorReset)
+	fmt.Println("Login successful!")
 	h.displayWhoAmI(ctx)
 	return nil
 }
@@ -87,9 +87,9 @@ func (h *CLIHandler) Enable2FA(ctx context.Context, args []string) error {
 	if h.AuthService.VerifyTOTP(&repository.User{TwoFASecret: secret}, code) {
 		_ = h.AuthService.Enable2FA(ctx, h.CurrentUser, secret)
 		h.CurrentUser.TwoFAEnabled = true
-		fmt.Printf("%s2FA enabled successfully!%s\n", colorGreen, colorReset)
+		fmt.Println("2FA enabled successfully!")
 	} else {
-		fmt.Printf("%sInvalid verification code. Canceled configuration steps.%s\n", colorRed, colorReset)
+		fmt.Println("Invalid verification code. Canceled configuration steps.")
 	}
 	return nil
 }
@@ -97,13 +97,13 @@ func (h *CLIHandler) Enable2FA(ctx context.Context, args []string) error {
 func (h *CLIHandler) Disable2FA(ctx context.Context, args []string) error {
 	_ = h.AuthService.Disable2FA(ctx, h.CurrentUser)
 	h.CurrentUser.TwoFAEnabled = false
-	fmt.Printf("%s2FA configuration deactivated.%s\n", colorGreen, colorReset)
+	fmt.Println("2FA configuration deactivated.")
 	return nil
 }
 
 func (h *CLIHandler) Logout(ctx context.Context, args []string) error {
 	h.performLogout(ctx)
-	fmt.Printf("%sLogged out successfully.%s\n", colorGreen, colorReset)
+	fmt.Println("Logged out successfully.")
 	return nil
 }
 
@@ -126,21 +126,21 @@ func (h *CLIHandler) performLogout(ctx context.Context) {
 
 func (h *CLIHandler) printHelpMenu() {
 	if h.CurrentUser == nil {
-		fmt.Printf("\n%sAvailable commands:%s register, login, help, exit\n", colorCyan, colorReset)
+		fmt.Println("\nAvailable commands: register, login, help, exit")
 	} else {
 		if h.CurrentUser.TwoFAEnabled {
-			fmt.Printf("\n%sAvailable commands:%s whoami, disable-2fa, logout, help\n", colorCyan, colorReset)
+			fmt.Println("\nAvailable commands: whoami, disable-2fa, logout, help")
 		} else {
-			fmt.Printf("\n%sAvailable commands:%s whoami, enable-2fa, logout, help\n", colorCyan, colorReset)
+			fmt.Println("\nAvailable commands: whoami, enable-2fa, logout, help")
 		}
 	}
 }
 
 func (h *CLIHandler) displayWhoAmI(ctx context.Context) {
 	sess, _ := h.UserRepo.GetSession(ctx, h.CurrentToken)
-	fmt.Printf("\n%s┌──────────────────────────────────────────────────┐%s\n", colorCyan, colorReset)
-	fmt.Printf("%s│             USER CONTEXT WORKSPACE               │%s\n", colorCyan, colorReset)
-	fmt.Printf("%s├──────────────────────────────────────────────────┤%s\n", colorCyan, colorReset)
+	fmt.Println("\n┌──────────────────────────────────────────────────┐")
+	fmt.Println("│             USER CONTEXT WORKSPACE               │")
+	fmt.Println("├──────────────────────────────────────────────────┤")
 	fmt.Printf("│  Username: %-38s │\n", h.CurrentUser.Username)
 	fmt.Printf("│  Created On: %-36s │\n", h.CurrentUser.CreatedAt.Format("2006-01-02 15:04:05"))
 	fmt.Printf("│  2FA Enabled: %-35t │\n", h.CurrentUser.TwoFAEnabled)
@@ -151,5 +151,5 @@ func (h *CLIHandler) displayWhoAmI(ctx context.Context) {
 		lastLoginStr = h.CurrentUser.LastLogin.Time.Format("2006-01-02 15:04:05")
 	}
 	fmt.Printf("│  Last Login: %-36s │\n", lastLoginStr)
-	fmt.Printf("%s└──────────────────────────────────────────────────┘%s\n", colorCyan, colorReset)
+	fmt.Println("└──────────────────────────────────────────────────┘")
 }

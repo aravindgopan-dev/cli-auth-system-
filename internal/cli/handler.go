@@ -11,12 +11,6 @@ import (
 	prompt "github.com/c-bata/go-prompt"
 )
 
-const (
-	colorReset = "\033[0m"
-	colorCyan  = "\033[1;36m"
-	colorRed   = "\033[1;31m"
-	colorGreen = "\033[1;32m"
-)
 
 type Authenticator interface {
 	Register(ctx context.Context, username, password string) error
@@ -53,7 +47,7 @@ func (h *CLIHandler) Run() {
      ██  ██      ██       ██    ██ ██   ██ ██          ██       ██      ██
 ███████  ███████  ██████   ██████  ██   ██ ███████      ██████  ███████ ██
 `
-	fmt.Printf("%s%s%s\n", colorCyan, banner, colorReset)
+	fmt.Printf("%s\n", banner)
 	h.printHelpMenu()
 
 	p := prompt.New(
@@ -159,6 +153,6 @@ func (h *CLIHandler) ExecuteCommand(input string) {
 	}
 
 	if err := targetFunc(ctx, args); err != nil {
-		fmt.Printf("%sError:%s %v\n", colorRed, colorReset, err)
+		fmt.Printf("Error: %v\n", err)
 	}
 }
