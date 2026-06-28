@@ -1,0 +1,6 @@
+app
+auth-cli
+.idea/
+.vscode/
+*.swp
+*.log

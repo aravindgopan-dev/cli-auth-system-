@@ -71,12 +71,14 @@ func (h *CLIHandler) Enable2FA(ctx context.Context, args []string) error {
 	fmt.Printf("Secret seed string: %s\nURI target parameters: %s\n", secret, url)
 	
 	fmt.Println("\nScan this QR code with your authenticator app:")
+	shortURL := fmt.Sprintf("otpauth://totp/SecureCLI:%s?secret=%s&issuer=SecureCLI", h.CurrentUser.Username, secret)
 	config := qrterminal.Config{
 		Level:      qrterminal.L,
 		Writer:     os.Stdout,
 		HalfBlocks: true,
+		QuietZone:  1,
 	}
-	qrterminal.GenerateWithConfig(url, config)
+	qrterminal.GenerateWithConfig(shortURL, config)
 	fmt.Println()
 	
 	code := prompt.Input("Verify app TOTP token number sequence: ", func(d prompt.Document) []prompt.Suggest { return nil })
@@ -126,7 +128,11 @@ func (h *CLIHandler) printHelpMenu() {
 	if h.CurrentUser == nil {
 		fmt.Println("\nAvailable commands: register, login, help, exit")
 	} else {
-		fmt.Println("\nAvailable commands: whoami, enable-2fa, disable-2fa, logout, help")
+		if h.CurrentUser.TwoFAEnabled {
+			fmt.Println("\nAvailable commands: whoami, disable-2fa, logout, help")
+		} else {
+			fmt.Println("\nAvailable commands: whoami, enable-2fa, logout, help")
+		}
 	}
 }
 

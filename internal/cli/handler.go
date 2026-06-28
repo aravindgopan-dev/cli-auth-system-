@@ -71,10 +71,13 @@ func (h *CLIHandler) CompleteCommand(d prompt.Document) []prompt.Suggest {
 	} else {
 		suggestions = []prompt.Suggest{
 			{Text: "whoami", Description: "View session metrics and account rules"},
-			{Text: "enable-2fa", Description: "Turn on secondary Google Authenticator TOTP factor"},
-			{Text: "disable-2fa", Description: "Strip account of 2FA boundaries"},
 			{Text: "logout", Description: "Flush workspace authorization cache"},
 			{Text: "help", Description: "Show active account workspace routes"},
+		}
+		if h.CurrentUser.TwoFAEnabled {
+			suggestions = append(suggestions, prompt.Suggest{Text: "disable-2fa", Description: "Strip account of 2FA boundaries"})
+		} else {
+			suggestions = append(suggestions, prompt.Suggest{Text: "enable-2fa", Description: "Turn on secondary Google Authenticator TOTP factor"})
 		}
 	}
 	return prompt.FilterHasPrefix(suggestions, d.GetWordBeforeCursor(), true)
